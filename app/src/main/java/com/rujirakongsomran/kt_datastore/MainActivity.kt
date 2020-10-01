@@ -2,10 +2,26 @@ package com.rujirakongsomran.kt_datastore
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.lifecycle.ViewModelProvider
+import com.rujirakongsomran.kt_datastore.viewmodel.MainViewModel
+import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
+
+    private lateinit var mainViewModel: MainViewModel
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        mainViewModel = ViewModelProvider(this).get(MainViewModel::class.java)
+        mainViewModel.readFromDataStore.observe(this, { myName ->
+            textView.text = myName
+        })
+
+        button.setOnClickListener {
+            val myName = editText.text.toString()
+            mainViewModel.saveToDataStore(myName)
+        }
     }
 }
